@@ -8,7 +8,11 @@ from .message import Message
 class MessageClient:
 
     def __init__(self):
-        self.connection = Client(Config.address)
+        try:
+            self.connection = Client(Config.address)
+        except ConnectionRefusedError:
+            print("Error: Connection Refused. Did you remember to start the server?")
+            raise ConnectionRefusedError
 
     def listen(self, callback: Callable[[Message], Any]):
         listen_process = Process(target=self._listen_worker, args=(callback,))
