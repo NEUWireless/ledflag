@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "47564996e792a20682e9316ea30410e6643e141ce1174644b277b7eed047a48a"
+            "sha256": "272f840be1b90ed78f40b6f54d227de7b82370ddd92d178e98c9e38a621e8c23"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -44,6 +44,10 @@
                 "sha256:9fe95f19286cfefaa917656583d020be14e7859c6b0252588391e47db34527de"
             ],
             "version": "==2.10.3"
+        },
+        "ledflag": {
+            "editable": true,
+            "path": "."
         },
         "markupsafe": {
             "hashes": [
@@ -118,5 +122,10 @@
             "version": "==0.16.0"
         }
     },
-    "develop": {}
+    "develop": {
+        "ledflag": {
+            "editable": true,
+            "path": "."
+        }
+    }
 }

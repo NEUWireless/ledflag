@@ -1,6 +1,7 @@
 from typing import TypeVar
 from PIL import Image
 
+
 class DisplayText:
 
     def __init__(self, text: str, size: int):

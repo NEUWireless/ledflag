@@ -6,8 +6,10 @@ name = "pypi"
 [packages]
 flask = "*"
 pillow = "*"
+ledflag = {editable = true,path = "."}
 
 [dev-packages]
+ledflag = {editable = true,path = "."}
 
 [requires]
 python_version = "3.7"
