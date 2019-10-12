@@ -10,10 +10,22 @@ class MessageServer:
         self.connection = None
 
     def connect(self):
+        """
+        Connect to the message client.
+        """
         self.connection = self.listener.accept()
 
     def send(self, message: Message):
+        """
+        Send a message to the client.
+
+        :param message: The message to send
+        :return: None
+        """
         self.connection.send(message)
 
     def close(self):
+        """
+        Close the connection to the client.
+        """
         self.connection.close()
