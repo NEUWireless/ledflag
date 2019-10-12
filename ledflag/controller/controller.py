@@ -18,7 +18,7 @@ class LedController:
         options = RGBMatrixOptions()
         options.rows = 32
         options.chain_length = 2
-        options.parallel = 0
+        options.parallel = 1
         options.hardware_mapping = 'adafruit-hat'
         self.matrix = RGBMatrix(options=options)
         # Start the listener

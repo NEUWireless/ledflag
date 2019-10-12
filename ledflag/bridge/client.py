@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from threading import Thread
 from multiprocessing.connection import Client
 from typing import Callable, Any
 from .config import Config
@@ -25,7 +25,7 @@ class MessageClient:
         :return: None
         """
         # Start the listener process
-        listen_process = Process(target=self._listen_worker, args=(callback,))
+        listen_process = Thread(target=self._listen_worker, args=(callback,))
         listen_process.start()
 
     def _listen_worker(self, callback: Callable[[Message], Any]):
