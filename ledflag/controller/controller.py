@@ -3,6 +3,7 @@ from ledflag.bridge.message import Message, DisplayText, DisplayImage
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from ledflag.controller.text import display_text
 from datetime import datetime
+from threading import Thread, Lock
 
 
 msg_functions = {
@@ -21,6 +22,7 @@ class LedController:
         options.parallel = 1
         options.hardware_mapping = 'adafruit-hat'
         self.matrix = RGBMatrix(options=options)
+        self.lock = Lock()
         # Start the listener
         self.mc = MessageClient()
         self.mc.listen(self.message_handler)
@@ -39,8 +41,21 @@ class LedController:
             datetime.now().strftime("%I:%M%p"), msg)
         )
 
+        led_process = Thread(target=self.run_leds, args=(msg,))
+        led_process.start()
+
+    def run_leds(self, msg: Message):
+        """
+        Dispatches a command to the LEDs in a thread-safe way.
+
+        :param msg: The instruction for the LED Matrix
+        :return: None
+        """
+        self.lock.acquire()
+        # check if message is old?
         # Run the appropriate function for the command (DisplayText, DisplayImage, etc.)
         msg_functions[type(msg)](msg, self.matrix)
+        self.lock.release()
 
 
 if __name__ == '__main__':
