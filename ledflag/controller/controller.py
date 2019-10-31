@@ -1,13 +1,14 @@
 from ledflag.bridge.client import MessageClient
-from ledflag.bridge.message import Message, DisplayText, DisplayImage
+from ledflag.bridge.message import Message, DisplayText, DisplayScrollingText, DisplayImage
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from ledflag.controller.text import display_text
+from ledflag.controller.text import display_text, display_scrolling_text
 from datetime import datetime
 from queue import Queue, Full
 
 
 msg_functions = {
     DisplayText: display_text,
+    DisplayScrollingText: display_scrolling_text,
     DisplayImage: lambda msg, matrix: print("Displaying image...")
 }
 
