@@ -1,6 +1,6 @@
 from flask import Flask, request
 from ledflag.bridge.server import MessageServer
-from ledflag.bridge.message import DisplayText
+from ledflag.bridge.message import DisplayText, DisplayScrollingText
 
 
 ms = MessageServer()
@@ -19,4 +19,11 @@ def hello_world():
 def display_text():
     text = request.args.get('text', default="NU Wireless")
     ms.send(DisplayText(text, 16))
+    return "ok"
+
+
+@app.route('/scrolltext')
+def display_scrolling_text():
+    text = request.args.get('text', default="NU Wireless")
+    ms.send(DisplayScrollingText(text))
     return "ok"

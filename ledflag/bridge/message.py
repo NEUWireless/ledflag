@@ -11,6 +11,15 @@ class DisplayText:
         return "DisplayText: {} @ size {}".format(self.text, self.size)
 
 
+class DisplayScrollingText:
+
+    def __init__(self, text: str):
+        self.text = text
+
+    def __str__(self):
+        return "DisplayScrollingText: {}".format(self.text)
+
+
 class DisplayImage:
 
     def __init__(self, image_file: str):
@@ -20,4 +29,4 @@ class DisplayImage:
         return "DisplayImage: {}".format(self.image_file)
 
 
-Message = TypeVar('Message', DisplayText, DisplayImage)
+Message = TypeVar('Message', DisplayText, DisplayScrollingText, DisplayImage)
