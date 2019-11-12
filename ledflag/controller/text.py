@@ -1,5 +1,6 @@
 from ledflag.bridge.message import DisplayText
 from rgbmatrix import RGBMatrix, graphics
+from time import sleep
 
 
 def display_text(msg: DisplayText, matrix: RGBMatrix, **kwargs):
@@ -28,3 +29,4 @@ def display_scrolling_text(msg: DisplayText, matrix: RGBMatrix, **kwargs):
         if pos + text_length < 0:
             pos = offscreen_canvas.width
         offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+        sleep(0.05)
