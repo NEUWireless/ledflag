@@ -4,6 +4,7 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from ledflag.controller.text import display_text, display_scrolling_text
 from datetime import datetime
 from queue import Queue, Full
+from typing import Callable
 
 
 msg_functions = {
@@ -24,9 +25,6 @@ class LedController:
         options.hardware_mapping = 'adafruit-hat'
         self.matrix = RGBMatrix(options=options)
         self.message_queue = Queue(maxsize=10)
-        # Start the listener
-        self.mc = MessageClient()
-        self.mc.listen(self.message_handler)
 
     def message_handler(self, msg: Message):
         """
@@ -47,11 +45,17 @@ class LedController:
         except Full:
             print("Ignored message {} — Timeout occurred".format(msg))
 
+    def run_msg(self, msg: Message, func: Callable, free=None):
+        if not free:
+            free = self.message_queue.empty
+        func(msg, self.matrix, free=free)
+
     def start(self):
+        mc = MessageClient()
+        mc.listen(self.message_handler)
         while True:
             msg = self.message_queue.get()
-            msg_functions[type(msg)](msg, self.matrix,
-                                     free=lambda: self.message_queue.empty())
+            self.run_msg(msg, msg_functions[type(msg)])
 
 
 if __name__ == '__main__':

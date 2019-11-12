@@ -6,7 +6,7 @@ from time import sleep
 def display_text(msg: DisplayText, matrix: RGBMatrix, **kwargs):
     print("Displaying text: {}".format(msg.text))
     font = graphics.Font()
-    font.LoadFont("fonts/7x13.bdf")
+    font.LoadFont("/home/pi/LED-Flag/ledflag/ledflag/controller/fonts/7x13.bdf")
     blue = graphics.Color(20, 235, 255)
     matrix.Clear()
     graphics.DrawText(matrix, font, 2, 10, blue, msg.text)
@@ -17,7 +17,7 @@ def display_scrolling_text(msg: DisplayText, matrix: RGBMatrix, **kwargs):
     matrix.Clear()
     offscreen_canvas = matrix.CreateFrameCanvas()
     font = graphics.Font()
-    font.LoadFont("fonts/7x13.bdf")
+    font.LoadFont("/home/pi/LED-Flag/ledflag/ledflag/controller/fonts/7x13.bdf")
     color = graphics.Color(255, 255, 0)
     pos = offscreen_canvas.width
     my_text = msg.text
