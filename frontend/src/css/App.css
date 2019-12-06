@@ -1,0 +1,21 @@
+.sider {
+  padding: 20px 0;
+}
+
+.sider h1 {
+  color: #fff;
+}
+
+.sider .title {
+  padding: 10px;
+  text-align: center;
+}
+
+.content {
+  padding: 25px;
+  height: 100vh;
+}
+
+.panel-container {
+  display: flex;
+}
