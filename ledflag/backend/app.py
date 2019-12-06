@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from ledflag.bridge.server import MessageServer
 from ledflag.bridge.message import DisplayText, DisplayScrollingText
 
@@ -7,12 +7,12 @@ ms = MessageServer()
 print("Waiting for matrix connection...")
 ms.connect()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="build/static", template_folder="build")
 
 
 @app.route('/')
-def hello_world():
-    return 'LED Flag @ NU Wireless'
+def index():
+    return render_template("index.html")
 
 
 @app.route('/displaytext')
