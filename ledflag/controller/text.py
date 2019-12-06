@@ -24,7 +24,7 @@ def display_scrolling_text(msg: DisplayText, matrix: RGBMatrix, **kwargs):
 
     while free():
         offscreen_canvas.Clear()
-        text_length = graphics.DrawText(offscreen_canvas, font, pos, 10, color, my_text)
+        text_length = graphics.DrawText(offscreen_canvas, font, pos, 19, color, my_text)
         pos -= 1
         if pos + text_length < 0:
             pos = offscreen_canvas.width

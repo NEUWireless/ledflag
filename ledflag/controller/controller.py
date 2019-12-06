@@ -49,6 +49,9 @@ class LedController:
         if not free:
             free = self.message_queue.empty
         func(msg, self.matrix, free=free)
+    
+    def clear(self):
+        self.matrix.Clear()
 
     def start(self):
         mc = MessageClient()
