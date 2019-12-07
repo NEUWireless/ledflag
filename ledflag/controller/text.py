@@ -18,7 +18,7 @@ def display_scrolling_text(msg: DisplayText, matrix: RGBMatrix, **kwargs):
     offscreen_canvas = matrix.CreateFrameCanvas()
     font = graphics.Font()
     font.LoadFont("/home/pi/LED-Flag/ledflag/ledflag/controller/fonts/7x13.bdf")
-    color = graphics.Color(255, 255, 0)
+    color = graphics.Color(76, 245, 141)
     pos = offscreen_canvas.width
     my_text = msg.text
 
