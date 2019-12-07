@@ -29,4 +29,19 @@ class DisplayImage:
         return "DisplayImage: {}".format(self.image_file)
 
 
-Message = TypeVar('Message', DisplayText, DisplayScrollingText, DisplayImage)
+class Draw:
+
+    def __init__(self, pixels):
+        self.pixels = pixels
+
+    def __str__(self):
+        return "Draw {} Pixels".format(len(self.pixels))
+
+
+class Clear:
+
+    def __str__(self):
+        return "Clear"
+
+
+Message = TypeVar('Message', DisplayText, DisplayScrollingText, DisplayImage, Draw, Clear)

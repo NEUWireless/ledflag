@@ -4,8 +4,12 @@ import {Layout, Menu, Icon} from "antd";
 import Panel from "./Panel.jsx";
 import "antd/dist/antd.css";
 import "../css/App.css";
+import DrawCanvas from "./DrawCanvas";
+import io from "socket.io-client";
 
 const { Content, Sider } = Layout;
+
+const socket = io();
 
 function App() {
 
@@ -40,6 +44,7 @@ function App() {
             <Route exact path="/">
               <div className="panel-container">
                 <Panel/>
+                <DrawCanvas socket={socket}/>
               </div>
             </Route>
           </Switch>

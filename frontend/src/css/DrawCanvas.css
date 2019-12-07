@@ -1,0 +1,10 @@
+.draw {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+}
+
+.canvas {
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
