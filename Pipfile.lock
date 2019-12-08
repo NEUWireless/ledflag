@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ea1f2d27b66017da2fdff1d71ff61c9eb4ca9a4e6036efcb144b5f922b39426f"
+            "sha256": "c70dd433a2b690710b2d02393e1186b6ab44e269b0ec28ee720c8011b022fde4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -28,7 +28,16 @@
                 "sha256:13f9f196f330c7c2c5d7a5cf91af894110ca0215ac051b5844701f2bfd934d52",
                 "sha256:45eb5a6fd193d6cf7e0cf5d8a5b31f83d5faae0293695626f539a823e93b13f6"
             ],
+            "index": "pypi",
             "version": "==1.1.1"
+        },
+        "flask-socketio": {
+            "hashes": [
+                "sha256:2172dff1e42415ba480cee02c30c2fc833671ff326f1598ee3d69aa02cf768ec",
+                "sha256:7ff5b2f5edde23e875a8b0abf868584e5706e11741557449bc5147df2cd78268"
+            ],
+            "index": "pypi",
+            "version": "==4.2.1"
         },
         "itsdangerous": {
             "hashes": [
@@ -114,7 +123,29 @@
                 "sha256:e0697b826da6c2472bb6488db4c0a7fa8af0d52fa08833ceb3681358914b14e5",
                 "sha256:e9a3edd5f714229d41057d56ac0f39ad9bdba6767e8c888c951869f0bdd129b0"
             ],
+            "index": "pypi",
             "version": "==6.2.1"
+        },
+        "python-engineio": {
+            "hashes": [
+                "sha256:4a13fb87c819b855c55a731fdf82559adb8311c04cfdfebd6b9ecd1c2afbb575",
+                "sha256:9c9a6035b4b5e5a225f426f846afa14cf627f7571d1ae02167cb703fefd134b7"
+            ],
+            "version": "==3.10.0"
+        },
+        "python-socketio": {
+            "hashes": [
+                "sha256:48cba5b827ac665dbf923a4f5ec590812aed5299a831fc43576a9af346272534",
+                "sha256:af6c23c35497960f82106e36688123ecb52ad5a77d0ca27954ff3811c4d9d562"
+            ],
+            "version": "==4.4.0"
+        },
+        "six": {
+            "hashes": [
+                "sha256:1f1b7d42e254082a9db6279deae68afb421ceba6158efa6131de7b3003ee93fd",
+                "sha256:30f610279e8b2578cab6db20741130331735c781b56053c59c4076da27f06b66"
+            ],
+            "version": "==1.13.0"
         },
         "werkzeug": {
             "hashes": [
