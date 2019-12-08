@@ -2,9 +2,26 @@
   display: flex;
   padding: 10px;
   flex-direction: column;
+  align-items: center;
 }
 
 .canvas {
   border-radius: 3px;
-  margin-bottom: 10px;
+  margin: 10px auto;
+  max-width: 512px;
+  touch-action: none;
+}
+
+.twitter-picker {
+  margin: 20px;
+}
+
+.ant-btn {
+  width: 100%;
+  max-width: 512px;
+}
+
+.ant-slider {
+  width: 100%;
+  max-width: 256px;
 }
