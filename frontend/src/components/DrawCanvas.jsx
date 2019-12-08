@@ -80,7 +80,7 @@ function DrawCanvas(props) {
     const modified = [];
     for (let y = Math.max(0, iy - diff); y < Math.min(iy + diff, LEDS_Y); y++) {
       for (let x = Math.max(0, ix - diff); x < Math.min(ix + diff, LEDS_X); x++) {
-        const ledIndex = y * LEDS_Y + x;
+        const ledIndex = y * LEDS_X + x;
         if (Math.sqrt(Math.pow(offsetX - idxToPos(x)  , 2) +
           Math.pow(offsetY - idxToPos(y), 2)) <= drawRadius * 2 * RADIUS &&
           !colorsEqual(drawColor, leds[ledIndex])) {
@@ -90,7 +90,7 @@ function DrawCanvas(props) {
       }
     }
     const newLeds = [...leds];
-    modified.forEach(p => newLeds[p.y * LEDS_Y + p.x] = [p.r, p.g, p.b]);
+    modified.forEach(p => newLeds[p.y * LEDS_X + p.x] = [p.r, p.g, p.b]);
     setLeds(newLeds);
     if (modified.length > 0) {
       console.log(modified);
