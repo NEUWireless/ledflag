@@ -3,10 +3,11 @@ from rgbmatrix import RGBMatrix, graphics
 
 
 def draw_pixels(msg: Draw, matrix: RGBMatrix, **kwargs):
-    offset_canvas = matrix.CreateFrameCanvas()
+    # offset_canvas = matrix.CreateFrameCanvas()
     for pixel in msg.pixels:
-        offset_canvas.SetPixel(pixel['x'], pixel['y'], pixel['r'], pixel['g'], pixel['b'])
-    matrix.SwapOnVSync(offset_canvas)
+        # offset_canvas.SetPixel(pixel['x'], pixel['y'], pixel['r'], pixel['g'], pixel['b'])
+        matrix.SetPixel(pixel['x'], pixel['y'], pixel['r'], pixel['g'], pixel['b'])
+    # matrix.SwapOnVSync(offset_canvas)
 
 
 def clear(msg: Clear, matrix: RGBMatrix, **kwargs):

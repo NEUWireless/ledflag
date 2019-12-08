@@ -34,6 +34,7 @@ def display_scrolling_text():
 @socketio.on('draw')
 def handle_draw(draw):
     pixels = draw['pixels']
+    print(pixels)
     ms.send(Draw(pixels))
 
 

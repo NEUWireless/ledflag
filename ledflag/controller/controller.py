@@ -11,7 +11,9 @@ from typing import Callable
 msg_functions = {
     DisplayText: display_text,
     DisplayScrollingText: display_scrolling_text,
-    DisplayImage: lambda msg, matrix: print("Displaying image...")
+    DisplayImage: lambda msg, matrix: print("Displaying image..."),
+    Draw: draw_pixels,
+    Clear: clear
 }
 
 
@@ -25,7 +27,7 @@ class LedController:
         options.parallel = 1
         options.hardware_mapping = 'adafruit-hat'
         self.matrix = RGBMatrix(options=options)
-        self.message_queue = Queue(maxsize=10)
+        self.message_queue = Queue(maxsize=50)
 
     def message_handler(self, msg: Message):
         """
