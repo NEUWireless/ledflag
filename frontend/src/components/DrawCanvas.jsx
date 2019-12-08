@@ -82,7 +82,7 @@ function DrawCanvas(props) {
     }
     if (modified.length > 0) {
       console.log(modified);
-      props.socket.emit('pixels', modified);
+      props.socket.emit('draw', {pixels: modified});
     }
   };
 
