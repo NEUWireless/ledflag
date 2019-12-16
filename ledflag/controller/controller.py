@@ -1,20 +1,8 @@
-from ledflag.bridge.client import MessageClient
-from ledflag.bridge.message import *
+from iotbridge.worker import Worker
+from iotbridge.message import Job, Query
+from ledflag.bridge.message import Instruction
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from ledflag.controller.text import display_text, display_scrolling_text
-from ledflag.controller.drawing import *
-from datetime import datetime
-from queue import Queue, Full
-from typing import Callable
-
-
-msg_functions = {
-    DisplayText: display_text,
-    DisplayScrollingText: display_scrolling_text,
-    DisplayImage: lambda msg, matrix: print("Displaying image..."),
-    Draw: draw_pixels,
-    Clear: clear
-}
+from flask_socketio import SocketIO
 
 
 class LedController:
@@ -27,41 +15,22 @@ class LedController:
         options.parallel = 1
         options.hardware_mapping = 'adafruit-hat'
         self.matrix = RGBMatrix(options=options)
-        self.message_queue = Queue(maxsize=50)
+        self.worker = Worker(self.job_handler, self.query_handler)
+        self.mode = None
+        self.socketio = SocketIO(message_queue="redis://")
 
-    def message_handler(self, msg: Message):
-        """
-        Handles each incoming message from the message server, calling the appropriate
-        function for each message to update the LED matrix.
+    def job_handler(self, job: Instruction, free=False):
+        self.mode = job.mode.__init__(self.matrix, self.socketio)
+        self.mode.run(job.args, free=self.worker.free)
 
-        :param msg: The message from the server
-        :return: None
-        """
-
-        # Print a debug statement
-        print("[{}] Received > {}".format(
-            datetime.now().strftime("%I:%M%p"), msg)
-        )
-
-        try:
-            self.message_queue.put(msg, timeout=5.0)
-        except Full:
-            print("Ignored message {} — Timeout occurred".format(msg))
-
-    def run_msg(self, msg: Message, func: Callable, free=None):
-        if not free:
-            free = self.message_queue.empty
-        func(msg, self.matrix, free=free)
-    
-    def clear(self):
-        self.matrix.Clear()
+    def query_handler(self, query: Query):
+        print(query)
+        if query.q == "pixels":
+            return self.mode.pixels
+        return None
 
     def start(self):
-        mc = MessageClient()
-        mc.listen(self.message_handler)
-        while True:
-            msg = self.message_queue.get()
-            self.run_msg(msg, msg_functions[type(msg)])
+        self.worker.start()
 
 
 if __name__ == '__main__':

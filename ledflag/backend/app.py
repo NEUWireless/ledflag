@@ -1,11 +1,12 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from flask_socketio import SocketIO
-from ledflag.bridge.server import MessageServer
-from ledflag.bridge.message import *
+from iotbridge.server import Server
+from iotbridge.message import Query
+from ledflag.bridge.message import Instruction
+from ledflag.controller.mode import *
 
-
-ms = MessageServer()
-print("Waiting for matrix connection...")
+ms = Server()
+print("Connecting to the LED Matrix...")
 ms.connect()
 
 app = Flask(__name__, static_folder="build/static", template_folder="build")
@@ -17,17 +18,10 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/displaytext')
-def display_text():
-    text = request.args.get('text', default="NU Wireless")
-    ms.send(DisplayText(text, 16))
-    return "ok"
-
-
 @app.route('/scrolltext')
 def display_scrolling_text():
     text = request.args.get('text', default="NU Wireless")
-    ms.send(DisplayScrollingText(text))
+    ms.task(Instruction(TextMode, {'text': text, 'size:': 16}))
     return "ok"
 
 
@@ -35,12 +29,18 @@ def display_scrolling_text():
 def handle_draw(draw):
     pixels = draw['pixels']
     print(pixels)
-    ms.send(Draw(pixels))
+    ms.task(Instruction(DrawMode, {'pixels': pixels}))
+
+
+@app.route('/draw/get')
+def query_draw():
+    pixels = ms.query(Query("pixels"))
+    return jsonify({'pixels', pixels})
 
 
 @app.route('/clear')
 def clear():
-    ms.send(Clear())
+    ms.task(Instruction(DrawMode, {'pixels': []}))
     return "ok"
 
 
