@@ -25,7 +25,7 @@ const drawMatrix = ctx => {
 const drawLED = (ctx, x, y) => {
   ctx.beginPath();
   ctx.arc(idxToPos(x), idxToPos(y), RADIUS, 0, Math.PI * 2, false);
-  ctx.fill()
+  ctx.fill();
 };
 
 const colorsEqual = (c1, c2) => (c1[0] === c2[0] && c1[1] === c2[1] && c1[2] === c2[2]);
@@ -48,8 +48,21 @@ function DrawCanvas(props) {
     const _ctx = canvas.getContext('2d');
     drawMatrix(_ctx);
     fillLeds([0, 0, 0]);
+    props.socket.on('draw_update', ({pixels}) => {
+      setLeds(leds => {
+        pixels.forEach(p => {
+          drawLED(_ctx, p.x, p.y);
+          leds[p.y * LEDS_X + p.x] = [p.r, p.g, p.b];
+        });
+        return leds;
+      });
+    });
+    props.socket.on('draw_clear', () => {
+      fillLeds([0, 0, 0]);
+      drawMatrix(_ctx);
+    });
     setCtx(_ctx);
-  }, []);
+  }, [props.socket]);
 
   const onMouseMove = event => {
     if (!isDrawing) return;
@@ -102,8 +115,8 @@ function DrawCanvas(props) {
     fetch("/clear", {
       method: "GET"
     }).then(res => console.log(res));
-    fillLeds([0, 0, 0]);
-    drawMatrix(ctx);
+    // handleDrawClear();
+    // ^ this will be done when the server responds
   };
 
   const fillLeds = clr => {
