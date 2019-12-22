@@ -21,17 +21,17 @@ class DrawMode(Mode):
         super().__init__(matrix, socketio)
         self.pixels = [(0, 0, 0)] * (matrix.width * matrix.height)
         self.matrix.Fill(0, 0, 0)
-        self.canvas = self.matrix.CreateFrameCanvas()
 
     def run(self, args: Dict, **kwargs):
         if len(args['pixels']) == 0:
-            self.canvas.Fill(0, 0, 0)
+            self.pixels = [(0, 0, 0)] * (self.matrix.width * self.matrix.height)
+            self.matrix.Fill(0, 0, 0)
+            self.socketio.emit('draw_clear', {})
         else:
             for pixel in args['pixels']:
                 self.pixels[pixel['y'] * self.matrix.width + pixel['x']] = (pixel['r'], pixel['g'], pixel['b'])
-                self.canvas.SetPixel(pixel['x'], pixel['y'], pixel['r'], pixel['g'], pixel['b'])
+                self.matrix.SetPixel(pixel['x'], pixel['y'], pixel['r'], pixel['g'], pixel['b'])
             self.socketio.emit('draw_update', {'pixels': args['pixels']})
-        self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
 
 class TextMode(Mode):
