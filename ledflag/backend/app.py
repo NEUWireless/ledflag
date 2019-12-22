@@ -4,6 +4,7 @@ from iotbridge.server import Server
 from iotbridge.message import Query
 from ledflag.bridge.message import Instruction
 from ledflag.controller.mode import *
+import json
 
 ms = Server()
 print("Connecting to the LED Matrix...")
@@ -35,7 +36,7 @@ def handle_draw(draw):
 @app.route('/draw/get')
 def query_draw():
     pixels = ms.query(Query("pixels"))
-    return jsonify({'pixels', pixels})
+    return jsonify({'pixels': json.dumps(list(map(list, pixels)))})
 
 
 @app.route('/clear')
