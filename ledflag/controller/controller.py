@@ -20,7 +20,8 @@ class LedController:
         self.socketio = SocketIO(message_queue="redis://")
 
     def job_handler(self, job: Instruction, free=False):
-        self.mode = job.mode.__init__(self.matrix, self.socketio)
+        if not isinstance(self.mode, job.mode):
+            self.mode = job.mode(self.matrix, self.socketio)
         self.mode.run(job.args, free=self.worker.free)
 
     def query_handler(self, query: Query):
