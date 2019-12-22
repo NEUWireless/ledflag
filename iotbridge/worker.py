@@ -59,5 +59,6 @@ class Worker:
         return self.job_queue.empty()
 
     def start(self):
+        self.connect()
         self.listen()
         self._job_worker()
