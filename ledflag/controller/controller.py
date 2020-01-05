@@ -2,6 +2,7 @@ from iotbridge.worker import Worker
 from iotbridge.message import Job, Query
 from ledflag.bridge.message import Instruction
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from ledflag.controller.mode import DrawMode
 from flask_socketio import SocketIO
 
 
@@ -27,7 +28,12 @@ class LedController:
     def query_handler(self, query: Query):
         print(query)
         if query.q == "pixels":
-            return self.mode.pixels
+            if isinstance(self.mode, DrawMode):
+                print("Sending pixels!")
+                return self.mode.pixels
+            else:
+                print("Sending a blank board!")
+                return [(0, 0, 0)] * (self.matrix.width * self.matrix.height)
         return None
 
     def start(self):
