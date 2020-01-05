@@ -47,10 +47,28 @@ function DrawCanvas(props) {
     const canvas = canvasRef.current;
     const _ctx = canvas.getContext('2d');
     drawMatrix(_ctx);
-    fillLeds([0, 0, 0]);
+    fetch('/draw/get', {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json"
+        }
+    }).then(res => res.json()).then(({pixels}) => {
+        console.log(pixels);
+        setLeds(pixels);
+        for (let y = 0; y < LEDS_Y; y++) {
+            for (let x = 0; x < LEDS_X; x++) {
+                const p = pixels[y * LEDS_X + x];
+                console.log(p);
+                _ctx.fillStyle = `rgb(${p[0]}, ${p[1]}, ${p[2]})`;
+                drawLED(_ctx, x, y);
+            }
+        }
+    });
+    // fillLeds([0, 0, 0]);
     props.socket.on('draw_update', ({pixels}) => {
       setLeds(leds => {
         pixels.forEach(p => {
+          _ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
           drawLED(_ctx, p.x, p.y);
           leds[p.y * LEDS_X + p.x] = [p.r, p.g, p.b];
         });
@@ -62,7 +80,7 @@ function DrawCanvas(props) {
       drawMatrix(_ctx);
     });
     setCtx(_ctx);
-  }, [props.socket]);
+  }, []);
 
   const onMouseMove = event => {
     if (!isDrawing) return;
