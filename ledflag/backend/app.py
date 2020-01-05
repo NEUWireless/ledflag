@@ -5,13 +5,16 @@ from iotbridge.message import Query
 from ledflag.bridge.message import Instruction
 from ledflag.controller.mode import *
 import json
+import eventlet
+eventlet.monkey_patch()
 
 ms = Server()
 print("Connecting to the LED Matrix...")
 ms.connect()
 
 app = Flask(__name__, static_folder="build/static", template_folder="build")
-socketio = SocketIO(app)
+# socketio = SocketIO(app)
+socketio = SocketIO(app, message_queue="redis://")
 
 
 @app.route('/')
@@ -31,12 +34,13 @@ def handle_draw(draw):
     pixels = draw['pixels']
     print(pixels)
     ms.task(Instruction(DrawMode, {'pixels': pixels}))
+    # socketio.emit('draw_update', {'pixels': pixels})
 
 
 @app.route('/draw/get')
 def query_draw():
     pixels = ms.query(Query("pixels"))
-    return jsonify({'pixels': json.dumps(list(map(list, pixels)))})
+    return jsonify({'pixels': list(map(list, pixels))})
 
 
 @app.route('/clear')
