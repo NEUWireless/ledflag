@@ -14,8 +14,8 @@ class Server:
             try:
                 self.connection = Client(Config.address)
             except ConnectionRefusedError:
-                print("Connection refused. Retrying in 5 seconds...")
-            sleep(5)
+                print("Connection refused. Retrying in 1 second...")
+            sleep(1)
         print("Connection established!")
 
     def task(self, job: Job):
