@@ -4,7 +4,6 @@ from iotbridge.server import Server
 from iotbridge.message import Query
 from ledflag.bridge.message import Instruction
 from ledflag.controller.mode import *
-import json
 import eventlet
 eventlet.monkey_patch()
 
