@@ -23,4 +23,8 @@ class Server:
 
     def query(self, query: Query):
         self.connection.send(query)
-        return self.connection.recv()
+        try:
+            return self.connection.recv()
+        except BlockingIOError:
+            print("Query not available")
+            return None

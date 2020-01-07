@@ -39,6 +39,8 @@ def handle_draw(draw):
 @app.route('/draw/get')
 def query_draw():
     pixels = ms.query(Query("pixels"))
+    if not pixels:
+        return "Unable to process query", 500
     return jsonify({'pixels': list(map(list, pixels))})
 
 
