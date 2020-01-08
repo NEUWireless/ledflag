@@ -46,8 +46,8 @@ class Worker:
                 msg = self.connection.recv()
                 self.message_handler(msg)
             # Catch the error caused by the connection closing
-            except EOFError:
-                print("Connection dropped (EOFError).")
+            except (ConnectionResetError, EOFError):
+                print("Connection dropped.")
                 print("Retrying in 5 seconds...")
                 sleep(5)
                 self.connect()
