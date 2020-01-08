@@ -2,6 +2,7 @@ from multiprocessing.connection import Listener
 from queue import Queue, Full
 from threading import Thread
 from typing import Callable
+from time import sleep
 from .message import *
 from .config import Config
 
@@ -21,7 +22,9 @@ class Worker:
         self.timeout = timeout
 
     def connect(self):
+        print("Waiting for server...")
         self.connection = self.listener.accept()
+        print("Connected!")
 
     def listen(self):
         listen_process = Thread(target=self._listen_worker)
@@ -34,6 +37,7 @@ class Worker:
         # Thread for processing queries
         query_process = Thread(target=self._query_worker)
         query_process.start()
+        print("Job and Query processors started.")
 
     def _listen_worker(self):
         # Receive messages in a loop
@@ -43,7 +47,11 @@ class Worker:
                 self.message_handler(msg)
             # Catch the error caused by the connection closing
             except EOFError:
-                return
+                print("Connection dropped (EOFError).")
+                print("Retrying in 5 seconds...")
+                sleep(5)
+                self.connect()
+                continue
             # Allow the user to exit with Ctrl+C
             except KeyboardInterrupt:
                 print("Exiting...")
@@ -78,6 +86,8 @@ class Worker:
         return self.job_queue.empty()
 
     def start(self):
+        print("Starting worker...")
         self.connect()
         self.listen()
         self.begin_processing()
+        print("Worker started.")
