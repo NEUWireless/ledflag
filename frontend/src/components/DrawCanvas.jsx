@@ -68,8 +68,10 @@ function DrawCanvas(props) {
                 drawLED(_ctx, x, y);
             }
         }
-    }).catch(err => console.log(err));
-    // fillLeds([0, 0, 0]);
+    }).catch(err => {
+      console.log(err);
+      fillLeds([0, 0, 0]);
+    });
     props.socket.on('draw_update', ({pixels}) => {
       setLeds(leds => {
         pixels.forEach(p => {
