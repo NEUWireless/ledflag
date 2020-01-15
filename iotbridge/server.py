@@ -10,6 +10,9 @@ class Server:
         self.connection = None
 
     def connect(self):
+        """
+        Establishes a connection to the worker.
+        """
         while not self.connection:
             try:
                 self.connection = Client(Config.address)
@@ -19,9 +22,15 @@ class Server:
         print("Connection established!")
 
     def task(self, job: Job):
+        """
+        Send a job to the worker.
+        """
         self.connection.send(job)
 
     def query(self, query: Query):
+        """
+        Query the worker for a value.
+        """
         self.connection.send(query)
         try:
             return self.connection.recv()

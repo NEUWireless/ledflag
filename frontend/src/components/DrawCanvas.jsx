@@ -52,7 +52,12 @@ function DrawCanvas(props) {
         headers: {
             "Accept": "application/json"
         }
-    }).then(res => res.json()).then(({pixels}) => {
+    }).then(res => {
+      if (!res.ok) {
+        throw new Error("Unable to fetch led current state");
+      }
+      return res.json();
+    }).then(({pixels}) => {
         console.log(pixels);
         setLeds(pixels);
         for (let y = 0; y < LEDS_Y; y++) {
@@ -63,7 +68,7 @@ function DrawCanvas(props) {
                 drawLED(_ctx, x, y);
             }
         }
-    });
+    }).catch(err => console.log(err));
     // fillLeds([0, 0, 0]);
     props.socket.on('draw_update', ({pixels}) => {
       setLeds(leds => {
