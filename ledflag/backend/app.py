@@ -6,9 +6,7 @@ from ledflag.bridge.message import ModeQuery as Query
 from ledflag.controller.modes.text import *
 from ledflag.controller.modes.draw import *
 import eventlet
-
 import numpy as np
-import json
 
 # Needed for iotbridge threading
 eventlet.monkey_patch()
@@ -64,10 +62,20 @@ def clear():
 # Image upload
 @app.route('/image', methods=['POST'])
 def image():
-    data = request.form.get('data')
-    print(data)
-    print(type(data))
-    print(json.loads(data))
+    data = request.json.get('data')
+    data_len = len(data)
+    assert data_len == 64*32*4
+    np_arr = np.array(data)
+    np_arr.shape = (32, 64, 4)
+    pixels = []
+    for y in range(32):
+        for x in range(64):
+            pix = np_arr[y][x]
+            pixels.append({'x': x, 'y': y, 'r': int(pix[0]), 'g': int(pix[1]), 'b': int(pix[2])})
+    print(pixels[:3])
+    ms.task(Instruction(DrawMode, DrawArgs(pixels)))
+    return "ok"
+
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0")
