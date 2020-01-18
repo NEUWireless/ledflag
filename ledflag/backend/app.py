@@ -7,6 +7,9 @@ from ledflag.controller.modes.text import *
 from ledflag.controller.modes.draw import *
 import eventlet
 
+import numpy as np
+import json
+
 # Needed for iotbridge threading
 eventlet.monkey_patch()
 
@@ -57,6 +60,14 @@ def clear():
     ms.task(Instruction(DrawMode, DrawArgs([])))
     return "ok"
 
+
+# Image upload
+@app.route('/image', methods=['POST'])
+def image():
+    data = request.form.get('data')
+    print(data)
+    print(type(data))
+    print(json.loads(data))
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0")
