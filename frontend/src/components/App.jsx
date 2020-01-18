@@ -5,6 +5,7 @@ import Panel from "./Panel.jsx";
 import "antd/dist/antd.css";
 import "../css/App.css";
 import DrawCanvas from "./DrawCanvas";
+import ImageUploader from "./ImageUploader";
 import io from "socket.io-client";
 
 const { Content, Sider } = Layout;
@@ -65,7 +66,10 @@ function App() {
               <Route path="/text">
                 <Panel/>
               </Route>
-              <Route path="/(pattern|image|games)">
+              <Route path="/image">
+                <ImageUploader/>
+              </Route>
+              <Route path="/(pattern|games)">
                 <h1>Coming soon!™</h1>
               </Route>
               <Route>
