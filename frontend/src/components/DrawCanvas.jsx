@@ -25,7 +25,7 @@ const drawMatrix = ctx => {
 const drawLED = (ctx, x, y) => {
   ctx.beginPath();
   ctx.arc(idxToPos(x), idxToPos(y), RADIUS, 0, Math.PI * 2, false);
-  ctx.fill()
+  ctx.fill();
 };
 
 const colorsEqual = (c1, c2) => (c1[0] === c2[0] && c1[1] === c2[1] && c1[2] === c2[2]);
@@ -47,7 +47,45 @@ function DrawCanvas(props) {
     const canvas = canvasRef.current;
     const _ctx = canvas.getContext('2d');
     drawMatrix(_ctx);
-    fillLeds([0, 0, 0]);
+    fetch('/draw/get', {
+        method: 'GET',
+        headers: {
+            "Accept": "application/json"
+        }
+    }).then(res => {
+      if (!res.ok) {
+        throw new Error("Unable to fetch led current state");
+      }
+      return res.json();
+    }).then(({pixels}) => {
+        console.log(pixels);
+        setLeds(pixels);
+        for (let y = 0; y < LEDS_Y; y++) {
+            for (let x = 0; x < LEDS_X; x++) {
+                const p = pixels[y * LEDS_X + x];
+                console.log(p);
+                _ctx.fillStyle = `rgb(${p[0]}, ${p[1]}, ${p[2]})`;
+                drawLED(_ctx, x, y);
+            }
+        }
+    }).catch(err => {
+      console.log(err);
+      fillLeds([0, 0, 0]);
+    });
+    props.socket.on('draw_update', ({pixels}) => {
+      setLeds(leds => {
+        pixels.forEach(p => {
+          _ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
+          drawLED(_ctx, p.x, p.y);
+          leds[p.y * LEDS_X + p.x] = [p.r, p.g, p.b];
+        });
+        return leds;
+      });
+    });
+    props.socket.on('draw_clear', () => {
+      fillLeds([0, 0, 0]);
+      drawMatrix(_ctx);
+    });
     setCtx(_ctx);
   }, []);
 
@@ -102,8 +140,8 @@ function DrawCanvas(props) {
     fetch("/clear", {
       method: "GET"
     }).then(res => console.log(res));
-    fillLeds([0, 0, 0]);
-    drawMatrix(ctx);
+    // handleDrawClear();
+    // ^ this will be done when the server responds
   };
 
   const fillLeds = clr => {

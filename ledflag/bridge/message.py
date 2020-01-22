@@ -1,47 +1,34 @@
-from typing import TypeVar
+from iotbridge.message import Job, Query
+from ledflag.controller.modes.mode import Mode, Args
+from typing import Type, Optional
 
 
-class DisplayText:
-
-    def __init__(self, text: str, size: int):
-        self.text = text
-        self.size = size
-
-    def __str__(self):
-        return "DisplayText: {} @ size {}".format(self.text, self.size)
-
-
-class DisplayScrollingText:
-
-    def __init__(self, text: str):
-        self.text = text
-
-    def __str__(self):
-        return "DisplayScrollingText: {}".format(self.text)
+class Instruction(Job):
+    """
+    An instruction is sent by the web server to the controller in order
+    to change or update the current mode.
+    """
+    def __init__(self, mode: Type[Mode], args: Args):
+        """
+        @param mode: The mode to be updated/swapped to
+        @param args: The information necessary for the mode to be executed
+        """
+        super().__init__()
+        self.mode = mode
+        self.args = args
 
 
-class DisplayImage:
-
-    def __init__(self, image_file: str):
-        self.image_file = image_file
-
-    def __str__(self):
-        return "DisplayImage: {}".format(self.image_file)
-
-
-class Draw:
-
-    def __init__(self, pixels):
-        self.pixels = pixels
-
-    def __str__(self):
-        return "Draw {} Pixels".format(len(self.pixels))
-
-
-class Clear:
-
-    def __str__(self):
-        return "Clear"
-
-
-Message = TypeVar('Message', DisplayText, DisplayScrollingText, DisplayImage, Draw, Clear)
+class ModeQuery(Query):
+    """
+    A ModeQuery is used to query the controller for information about its current mode
+    """
+    def __init__(self, mode: Optional[Type[Mode]], q: str):
+        """
+        @param mode: The mode to query information about (if no mode is specified,
+        the query is assumed to be about general information such as "what mode is
+        the led flag currently in?"
+        @param q: The property/state to be queried (e.g. 'pixels' for the current state
+        of the led flag's pixels)
+        """
+        super().__init__(q)
+        self.mode = mode

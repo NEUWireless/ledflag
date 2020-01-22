@@ -1,24 +1,14 @@
-from ledflag.bridge.client import MessageClient
-from ledflag.bridge.message import *
+from iotbridge.worker import Worker
+from ledflag.bridge.message import Instruction, ModeQuery as Query
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from ledflag.controller.text import display_text, display_scrolling_text
-from ledflag.controller.drawing import *
-from datetime import datetime
-from queue import Queue, Full
-from typing import Callable
-
-
-msg_functions = {
-    DisplayText: display_text,
-    DisplayScrollingText: display_scrolling_text,
-    DisplayImage: lambda msg, matrix: print("Displaying image..."),
-    Draw: draw_pixels,
-    Clear: clear
-}
+from flask_socketio import SocketIO
 
 
 class LedController:
-
+    """
+    The LED Flag controller is the object which handles instructions from the worker and displays
+    the corresponding graphics on the LED matrix. It also responds to queries about its current state/mode.
+    """
     def __init__(self):
         # Configure Matrix Options
         options = RGBMatrixOptions()
@@ -26,42 +16,48 @@ class LedController:
         options.chain_length = 2
         options.parallel = 1
         options.hardware_mapping = 'adafruit-hat'
+        # Create the matrix object
         self.matrix = RGBMatrix(options=options)
-        self.message_queue = Queue(maxsize=50)
+        # Initialize the worker
+        self.worker = Worker(self.job_handler, self.query_handler)
+        # Starts in undefined mode
+        self.mode = None
+        self.socketio = SocketIO(message_queue="redis://")
 
-    def message_handler(self, msg: Message):
+    def job_handler(self, job: Instruction):
         """
-        Handles each incoming message from the message server, calling the appropriate
-        function for each message to update the LED matrix.
+        Processes instructions from the web server.
+        When a new instruction comes in, the mode is switched if necessary and the arguments
+        are passed to the current mode.
 
-        :param msg: The message from the server
-        :return: None
+        @param job: The instruction that tells the controller what to do (e.g. draw these three pixels)
         """
+        # Switch the mode if a new mode is requested
+        if not isinstance(self.mode, job.mode):
+            self.mode = job.mode(self.matrix, self.socketio)
+        # Execute the mode's run method
+        self.mode.run(job.args, free=self.worker.free)
 
-        # Print a debug statement
-        print("[{}] Received > {}".format(
-            datetime.now().strftime("%I:%M%p"), msg)
-        )
+    def query_handler(self, query: Query):
+        """
+        Processes queries from the web server and responds appropriately.
 
-        try:
-            self.message_queue.put(msg, timeout=5.0)
-        except Full:
-            print("Ignored message {} — Timeout occurred".format(msg))
-
-    def run_msg(self, msg: Message, func: Callable, free=None):
-        if not free:
-            free = self.message_queue.empty
-        func(msg, self.matrix, free=free)
-    
-    def clear(self):
-        self.matrix.Clear()
+        @param query: What information the web server needs from the controller
+        """
+        if not query.mode:
+            # If the query does not specify a mode, it is a general query
+            # e.g. what mode is the led flag currently in?
+            return None
+        if isinstance(self.mode, query.mode):
+            # If the query is about the mode the flag is currently in,
+            # have that mode handle the query
+            return self.mode.handle_query(query.q)
 
     def start(self):
-        mc = MessageClient()
-        mc.listen(self.message_handler)
-        while True:
-            msg = self.message_queue.get()
-            self.run_msg(msg, msg_functions[type(msg)])
+        """
+        Starts the LED controller.
+        """
+        self.worker.start()
 
 
 if __name__ == '__main__':
