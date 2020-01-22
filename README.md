@@ -2,7 +2,9 @@ LED Flag
 ========
 LED Flag Project @ NU Wireless
 
-![An image of the LED Flag](https://jamespackard.me/img/ledflag.jpg)
+<p align="center">
+  <img src="https://jamespackard.me/img/ledflag.jpg" alt="An image of the LED Flag" width="70%"/>
+</p>
 
 **LED Flag** is an ongoing project at the NU Wireless club.
 The objective is to control a 32x64 matrix of addressable LEDs wirelessly through a web application,
@@ -187,7 +189,7 @@ ledflag/backend $ python3 app.py
 ```bash
 ledflag/controller $ python3 controller.py
 ```
-The first command runs the web server, while the second runs the LED controller. A cool trick to do this is running the first command, hitting `Ctrl+Z`,
+The first command runs the web server, while the second runs the LED controller. A cool trick to do this is running the first command, hitting <kbd>Ctrl</kbd>+<kbd>Z</kbd>,
 and then running the command `bg`.
 
 ## Production
