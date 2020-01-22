@@ -1,6 +1,8 @@
 # LED Flag
 LED Flag Project @ NU Wireless
 
+![An image of the LED Flag](https://jamespackard.me/img/ledflag.jpg)
+
 **LED Flag** is an ongoing project at the NU Wireless club.
 The objective is to control a 32x64 matrix of addressable LEDs wirelessly through a web application,
 with a variety of features planned. Displaying text, images, and the ability to draw only the matrix
