@@ -118,7 +118,7 @@ function LedBoard(props) {
     const modified = drawPoint(ctx, offsetX, offsetY, leds);
     modified.forEach(p => leds[p.y * LEDS_X + p.x] = [p.r, p.g, p.b]);
     if (modified.length !== 0) {
-      props.socket.emit('draw', modified);
+      props.socket.emit('draw', {pixels: modified});
     }
   };
 
