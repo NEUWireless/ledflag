@@ -4,7 +4,7 @@ import {Layout, Menu, Icon} from "antd";
 import Panel from "./Panel.jsx";
 import "antd/dist/antd.css";
 import "../css/App.css";
-import DrawCanvas from "./DrawCanvas";
+import DrawMode from "./DrawMode";
 import ImageUploader from "./ImageUploader";
 import io from "socket.io-client";
 
@@ -61,7 +61,7 @@ function App() {
           <div className="panel-container">
             <Switch>
               <Route path="(/|/draw)">
-                <DrawCanvas socket={socket}/>
+                <DrawMode socket={socket}/>
               </Route>
               <Route path="/text">
                 <Panel/>

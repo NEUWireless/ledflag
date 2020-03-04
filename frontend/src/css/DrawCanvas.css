@@ -1,14 +1,44 @@
 .draw {
-  display: flex;
   padding: 10px;
-  flex-direction: column;
   align-items: center;
+  width: 100%;
+  min-width: 200px;
+  max-width: 750px;
+}
+
+.draw-settings {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.draw-settings > div {
+  flex: 1 300px;
+}
+
+.settings-group {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px;
+}
+
+.button-group {
+  text-align: center;
+  display: flex;
+  align-content: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.button-group .ant-btn {
+  min-width: 100px;
+  width: 40%;
 }
 
 .canvas {
   border-radius: 3px;
   margin: 10px auto;
-  max-width: 512px;
   touch-action: none;
 }
 
@@ -16,12 +46,6 @@
   margin: 20px;
 }
 
-.ant-btn {
-  width: 100%;
-  max-width: 512px;
-}
-
 .ant-slider {
-  width: 100%;
-  max-width: 256px;
+  width: 98%;
 }
