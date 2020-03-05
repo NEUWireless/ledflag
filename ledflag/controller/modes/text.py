@@ -2,6 +2,10 @@ from time import sleep
 from ledflag.controller.modes.mode import Args, Mode
 from flask_socketio import SocketIO
 from rgbmatrix import RGBMatrix, graphics
+from os import path
+from ledflag.definitions import PROJECT_ROOT
+
+FONTS_DIR = path.join(PROJECT_ROOT, "controller/fonts")
 
 
 class TextArgs(Args):
@@ -33,7 +37,7 @@ class TextMode(Mode):
         self.matrix.Clear()
         offscreen_canvas = self.matrix.CreateFrameCanvas()
         font = graphics.Font()
-        font.LoadFont("/home/pi/LED-Flag/ledflag/ledflag/controller/fonts/7x13.bdf")
+        font.LoadFont(path.join(FONTS_DIR, "7x13.bdf"))
         color = graphics.Color(76, 245, 141)
         pos = offscreen_canvas.width
         my_text = args.text
