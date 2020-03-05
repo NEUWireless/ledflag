@@ -79,6 +79,9 @@ function LedBoard(props) {
   }, [loading, drawAll]);
 
   useEffect(() => {
+    // Clear any existing handlers
+    props.socket.off('draw_update');
+    props.socket.off('draw_clear');
     const ctx = canvasRef.current.getContext('2d');
     props.socket.on('draw_update', ({ pixels }) => {
       pixels.forEach(p => {
