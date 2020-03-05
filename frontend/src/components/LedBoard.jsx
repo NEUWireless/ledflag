@@ -79,21 +79,24 @@ function LedBoard(props) {
   }, [loading, drawAll]);
 
   useEffect(() => {
-    // Clear any existing handlers
-    props.socket.off('draw_update');
-    props.socket.off('draw_clear');
     const ctx = canvasRef.current.getContext('2d');
-    props.socket.on('draw_update', ({ pixels }) => {
+    const drawUpdate = ({ pixels }) => {
       pixels.forEach(p => {
         ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
         drawLED(ctx, p.x, p.y, props.scale);
         leds[p.y * LEDS_X + p.x] = [p.r, p.g, p.b];
       });
-    });
-    props.socket.on('draw_clear', () => {
+    };
+    const drawClear = () => {
       fillLeds([0, 0, 0]);
       drawMatrix(ctx, props.scale);
-    });
+    };
+    props.socket.on('draw_update', drawUpdate);
+    props.socket.on('draw_clear', drawClear);
+    return () => {
+      props.socket.off('draw_update', drawUpdate);
+      props.socket.off('draw_clear', drawClear);
+    }
   }, [props.socket, props.scale]);
 
   const drawPoint = (ctx, offsetX, offsetY) => {
