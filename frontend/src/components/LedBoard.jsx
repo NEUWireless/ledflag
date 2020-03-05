@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import "../css/DrawCanvas.css";
 
 export const LEDS_X = 64;
@@ -39,9 +39,9 @@ function LedBoard(props) {
 
   const canvasRef = useRef();
   const [isDrawing, setIsDrawing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
+  const drawAll = useCallback(() => {
     const ctx = canvasRef.current.getContext('2d');
     drawMatrix(ctx, props.scale);
     for (let y = 0; y < LEDS_Y; y++) {
@@ -54,6 +54,10 @@ function LedBoard(props) {
   }, [props.scale]);
 
   useEffect(() => {
+    drawAll();
+    if (!loading) {
+      return;
+    }
     fetch('/draw/get', {
       method: 'GET',
       headers: {
@@ -65,19 +69,14 @@ function LedBoard(props) {
       }
       return res.json();
     }).then(({ pixels }) => {
-      const ctx = canvasRef.current.getContext('2d');
       for (let i = 0; i < LEDS_X * LEDS_Y; i++) {
-        const p = pixels[i];
-        leds[i] = p;
-        const x = i % LEDS_X;
-        const y = Math.floor(i / LEDS_X);
-        ctx.fillStyle = ctx.fillStyle = `rgb(${p.r}, ${p.g}, ${p.b})`;
-        drawLED(ctx, x, y, props.scale);
+        leds[i] = pixels[i];
       }
+      setLoading(false);
     }).catch(err => {
       console.log(err);
-    });
-  }, []);
+    }).finally(drawAll);
+  }, [loading, drawAll]);
 
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
